@@ -61,9 +61,9 @@ Now we can use this data for our analysis properly.
 ``` r
 total_steps_per_day <- group_by(activity,date) %>%
                        summarise(total_steps=sum(steps,na.rm = TRUE))
-g_tot <- ggplot(total_steps_per_day,aes(x=date,y=total_steps))
+g_tot <- ggplot(total_steps_per_day,aes(x=total_steps))
 g_tot + 
-  geom_col(fill="deeppink") + 
+  geom_histogram(fill="deeppink") + 
   labs(title= "Total Number of Steps Taken per Day",x="",y="Total Steps")+
   theme(plot.title = element_text(hjust=0.5))
 ```
@@ -149,9 +149,9 @@ activity_imp <- kNN(activity,variable = c("steps"),k=6,imp_var = F)
 
 total_imp <- group_by(activity_imp,date) %>%
                       summarise(total_steps=sum(steps,na.rm = TRUE))
-g_tot_imp <- ggplot(total_imp,aes(x=date,y=total_steps))
+g_tot_imp <- ggplot(total_imp,aes(x=total_steps))
 g_tot_imp + 
-  geom_col(fill="deeppink") + 
+  geom_histogram(fill="deeppink") + 
   labs(title= "Total Number of Steps Taken per Day",x="",y="Total Steps")+
   theme(plot.title = element_text(hjust=0.5))
 ```
