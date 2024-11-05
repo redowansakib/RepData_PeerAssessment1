@@ -73,42 +73,28 @@ g_tot +
 #### Mean Steps per Day
 
 ``` r
-mean_steps_per_day <- group_by(activity,date) %>%
-                      summarise(mean_steps=mean(steps,na.rm = TRUE))
-head(mean_steps_per_day)
+mean_steps_per_day <- mean(total_steps_per_day$total_steps,na.rm = T)
+mean_steps_per_day
 ```
 
 ```
-## # A tibble: 6 × 2
-##   date       mean_steps
-##   <date>          <dbl>
-## 1 2012-10-01    NaN    
-## 2 2012-10-02      0.438
-## 3 2012-10-03     39.4  
-## 4 2012-10-04     42.1  
-## 5 2012-10-05     46.2  
-## 6 2012-10-06     53.5
+## [1] 9354.23
 ```
+
+Mean steps per day is 9354.23
 
 #### Median Steps per Day
 
 ``` r
-median_steps_per_day <- group_by(activity,date) %>%
-                        summarise(median_steps=median(steps,na.rm = TRUE))
-head(median_steps_per_day)
+median_steps_per_day <- median(total_steps_per_day$total_steps,na.rm = T)
+median_steps_per_day
 ```
 
 ```
-## # A tibble: 6 × 2
-##   date       median_steps
-##   <date>            <dbl>
-## 1 2012-10-01           NA
-## 2 2012-10-02            0
-## 3 2012-10-03            0
-## 4 2012-10-04            0
-## 5 2012-10-05            0
-## 6 2012-10-06            0
+## [1] 10395
 ```
+
+Median steps per day is 10395
 
 ## What is the average daily activity pattern?
 
@@ -142,7 +128,20 @@ Maximum mean daily interval is 835  with 206. steps.
 
 ## Imputing missing values
 
-For imputing strategy used here is K-Nearest Neighbor. Nearest 6 row of each row is calculated by euclidean method and then the most likely value has been taken from the nearest rows. Imputed version of total dataset is assigned to new variable `activity_imp`.
+
+
+``` r
+sum(is.na(activity))
+```
+
+```
+## [1] 2304
+```
+There are total number of 2304 NA values in the data set.
+
+
+Imputing strategy used here is K-Nearest Neighbor. Nearest 6 row of each row is calculated by euclidean method and then the most likely value has been taken from the nearest rows. Imputed version of total dataset is assigned to new variable `activity_imp`.
+
 
 
 ``` r
@@ -159,44 +158,33 @@ g_tot_imp +
 
 ![](PA1_template_files/figure-html/Imputin Missing Values-1.png)<!-- -->
 
+
+From the title we can see that some of the days had missing values and in turn missing columns but after imputation those columns has been filled with values.
+
+
+
 ``` r
-mean_imp <- group_by(activity_imp,date) %>%
-                      summarise(mean_steps=mean(steps,na.rm = TRUE))
-head(mean_imp)
+mean_imp <- mean(total_imp$total_steps,na.rm = T)
+
+mean_imp
 ```
 
 ```
-## # A tibble: 6 × 2
-##   date       mean_steps
-##   <date>          <dbl>
-## 1 2012-10-01      9.76 
-## 2 2012-10-02      0.438
-## 3 2012-10-03     39.4  
-## 4 2012-10-04     42.1  
-## 5 2012-10-05     46.2  
-## 6 2012-10-06     53.5
+## [1] 9722.754
 ```
 
 ``` r
-median_imp <- group_by(activity_imp,date) %>%
-                        summarise(median_steps=median(steps,na.rm = TRUE))
-head(median_imp)
+median_imp <- median(total_imp$total_steps,na.rm=T)
+
+median_imp
 ```
 
 ```
-## # A tibble: 6 × 2
-##   date       median_steps
-##   <date>            <dbl>
-## 1 2012-10-01            0
-## 2 2012-10-02            0
-## 3 2012-10-03            0
-## 4 2012-10-04            0
-## 5 2012-10-05            0
-## 6 2012-10-06            0
+## [1] 10395
 ```
 
-After imputation we can see that the mean steps per date has changed. Before imputation we could observe some NA values despite `na.rm = T`. But after imputation the NA values are populated. But in case of median the values are still zero. The plot of total steps before imputation has some missing column but after imputation those columns are visible and has some values.
-
+After imputation mean steps per day is 9722.754 and median steps per day is 10395.
+Though mean has changed in fact increased the median has not changed. The imputation technique did not impact median value.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -219,6 +207,6 @@ g_days +
   facet_wrap(vars(day),nrow=2,ncol=1,strip.position="top")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 From the plot we can see there is a clear contrast in average steps between weekday and weekend.

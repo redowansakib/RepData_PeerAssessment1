@@ -54,18 +54,20 @@ g_tot +
 
 #### Mean Steps per Day
 ```{r mean, echo=T}
-mean_steps_per_day <- group_by(activity,date) %>%
-                      summarise(mean_steps=mean(steps,na.rm = TRUE))
-head(mean_steps_per_day)
+mean_steps_per_day <- mean(total_steps_per_day$total_steps,na.rm = T)
+mean_steps_per_day
 ```
+
+Mean steps per day is 9354.23
 
 #### Median Steps per Day
 ```{r median, echo=T}
 
-median_steps_per_day <- group_by(activity,date) %>%
-                        summarise(median_steps=median(steps,na.rm = TRUE))
-head(median_steps_per_day)
+median_steps_per_day <- median(total_steps_per_day$total_steps,na.rm = T)
+median_steps_per_day
 ```
+
+Median steps per day is 10395
 
 ## What is the average daily activity pattern?
 ```{r average daily activity pattern, echo = T}
@@ -87,7 +89,16 @@ Maximum mean daily interval is 835  with 206. steps.
 
 ## Imputing missing values
 
-For imputing strategy used here is K-Nearest Neighbor. Nearest 6 row of each row is calculated by euclidean method and then the most likely value has been taken from the nearest rows. Imputed version of total dataset is assigned to new variable `activity_imp`.
+
+```{r,echo=T}
+sum(is.na(activity))
+
+```
+There are total number of 2304 NA values in the data set.
+
+
+Imputing strategy used here is K-Nearest Neighbor. Nearest 6 row of each row is calculated by euclidean method and then the most likely value has been taken from the nearest rows. Imputed version of total dataset is assigned to new variable `activity_imp`.
+
 
 ```{r Imputin Missing Values,echo=T}
 activity_imp <- kNN(activity,variable = c("steps"),k=6,imp_var = F)
@@ -99,18 +110,25 @@ g_tot_imp +
   geom_col(fill="deeppink") + 
   labs(title= "Total Number of Steps Taken per Day",x="",y="Total Steps")+
   theme(plot.title = element_text(hjust=0.5))
-
-mean_imp <- group_by(activity_imp,date) %>%
-                      summarise(mean_steps=mean(steps,na.rm = TRUE))
-head(mean_imp)
-
-median_imp <- group_by(activity_imp,date) %>%
-                        summarise(median_steps=median(steps,na.rm = TRUE))
-head(median_imp)
 ```
 
-After imputation we can see that the mean steps per date has changed. Before imputation we could observe some NA values despite `na.rm = T`. But after imputation the NA values are populated. But in case of median the values are still zero. The plot of total steps before imputation has some missing column but after imputation those columns are visible and has some values.
 
+From the title we can see that some of the days had missing values and in turn missing columns but after imputation those columns has been filled with values.
+
+
+```{r,echo=T}
+mean_imp <- mean(total_imp$total_steps,na.rm = T)
+
+mean_imp
+
+median_imp <- median(total_imp$total_steps,na.rm=T)
+
+median_imp
+
+```
+
+After imputation mean steps per day is 9722.754 and median steps per day is 10395.
+Though mean has changed in fact increased the median has not changed. The imputation technique did not impact median value.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
